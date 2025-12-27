@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>2026大關西❄️散策 V49 (手機版面優化版)</title>
+  <title>大關西散策2026 V55</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -24,10 +24,10 @@
   <link id="app-icon" rel="apple-touch-icon" href="">
   <link id="fav-icon" rel="icon" type="image/png" href="">
 
-  <!-- Google Fonts: Zen Maru Gothic -->
+  <!-- Google Fonts: Zen Maru Gothic & Yomogi -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <style>
     /* Global Styles & Variables */
@@ -182,6 +182,35 @@
     @keyframes stamp {
         0% { transform: scale(3) rotate(-20deg); opacity: 0; }
         100% { transform: scale(1) rotate(-10deg); opacity: 1; }
+    }
+
+    /* Special Font for Banner */
+    .banner-font {
+        font-family: 'Yomogi', 'Zen Maru Gothic', sans-serif;
+        font-weight: 400; /* Regular weight, not bold */
+    }
+
+    /* Snow Animation */
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: white;
+      font-size: 10px;
+      animation: fall linear infinite;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      to { transform: translateY(120px); opacity: 0; }
+    }
+    
+    /* Cute Bounce for Snowmen */
+    @keyframes cute-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+    .animate-cute-bounce {
+        animation: cute-bounce 2s infinite ease-in-out;
     }
 
     /* Print Styles */
@@ -341,7 +370,7 @@
             const fetchWeather = async () => { try { const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=34.6937&longitude=135.5023&current_weather=true'); const data = await res.json(); setWeather(data.current_weather); } catch (e) { console.warn("Weather fetch failed"); } };
             fetchWeather(); return () => clearInterval(timer);
         }, []);
-        return (<div className="flex gap-2 items-center text-white text-xs font-bold bg-black/20 rounded-xl px-3 py-1" style={{border: '1px solid rgba(255,255,255,0.3)', backgroundColor: 'rgba(0,0,0,0.2)'}}><span>{time.getHours().toString().padStart(2,'0')}:{time.getMinutes().toString().padStart(2,'0')}</span><span className="w-[1px] h-3 bg-white/50"></span><span>{weather ? `${weather.temperature}°C` : '...'}</span></div>);
+        return (<div className="flex gap-2 items-center text-white text-xs font-bold bg-white/20 rounded-xl px-3 py-1" style={{border: '1px solid rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.1)'}}><span>{time.getHours().toString().padStart(2,'0')}:{time.getMinutes().toString().padStart(2,'0')}</span><span className="w-[1px] h-3 bg-white/50"></span><span>{weather ? `${weather.temperature}°C` : '...'}</span></div>);
     };
 
     // --- Calculator Component ---
@@ -867,7 +896,7 @@
                 <div className="space-y-3">
                     <input type="text" placeholder="項目" value={newExpense.item} onChange={e => setNewExpense({...newExpense, item: e.target.value})} className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 font-bold text-lg outline-none dashed-input" />
                     
-                    {/* Merged Amount and Currency Input */}
+                    {/* Merged Amount and Currency Input (Modal) */}
                     <div className="flex items-center w-full dashed-input overflow-hidden px-2 bg-[#FAFAFA]">
                         <input 
                             type="text" 
@@ -881,9 +910,9 @@
                         <select 
                             value={newExpense.currency} 
                             onChange={e => setNewExpense({...newExpense, currency: e.target.value})} 
-                            className="bg-transparent border-none outline-none font-bold text-lg w-20 text-center text-gray-600 appearance-none h-12"
+                            className="bg-transparent border-none outline-none font-bold text-xl w-36 text-center text-gray-600 appearance-none h-12"
                         >
-                            {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
+                            {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
                         </select>
                     </div>
 
@@ -958,7 +987,7 @@
                         </div>
                     </div>
                     <div className="border-4 border-black p-4 sm:p-8 mb-8 text-center bg-[#FCE4EC] rounded-3xl avoid-break ticket-box">
-                        <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-widest text-[#880E4F]" contentEditable suppressContentEditableWarning>2026<br/>大關西散策</h1>
+                        <h1 className="text-4xl sm:text-6xl font-black mb-4 tracking-widest text-[#880E4F] banner-font" contentEditable suppressContentEditableWarning>大關西散策<br/>2026</h1>
                         <div className="text-xl sm:text-2xl font-bold text-gray-600" contentEditable suppressContentEditableWarning>TRAVEL ITINERARY</div>
                     </div>
                     {itinerary.map((day) => (
@@ -1013,7 +1042,20 @@
 
           <div className="safe-area-top"></div>
           <div className="bg-[#F48FB1] px-4 py-2 relative overflow-hidden border-b-2 border-black shrink-0 z-50">
-            <div className="flex justify-between items-center"><h1 className="text-xl sm:text-2xl font-bold text-white tracking-widest flex items-center gap-2"><span>⛄❄️⛩️</span> 2026大關西❄️散策</h1><div className="flex items-center gap-3"><WeatherWidget /><button onClick={() => setShowSettingsModal(true)} className="text-white hover:text-gray-100 bg-white/20 p-1.5 rounded-full"><Icons.Settings size={24} /></button></div></div>
+            <div className="flex justify-between items-center"><h1 className="text-xl sm:text-2xl text-white tracking-widest flex items-center gap-2 banner-font"><span>⛩️</span> 大關西散策2026</h1><div className="flex items-center gap-3"><WeatherWidget /><button onClick={() => setShowSettingsModal(true)} className="text-white hover:text-gray-100 bg-white/20 p-1.5 rounded-full"><Icons.Settings size={24} /></button></div></div>
+            {/* Snow Effect */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden h-full z-0"><div className="snowflake" style={{left: '10%', animationDuration: '5s', animationDelay: '0s'}}>❄</div><div className="snowflake" style={{left: '30%', animationDuration: '7s', animationDelay: '1s'}}>❄</div><div className="snowflake" style={{left: '50%', animationDuration: '4s', animationDelay: '2s'}}>❄</div><div className="snowflake" style={{left: '70%', animationDuration: '6s', animationDelay: '0.5s'}}>❄</div><div className="snowflake" style={{left: '90%', animationDuration: '8s', animationDelay: '1.5s'}}>❄</div></div>
+            
+            {/* Cute Snowmen Row */}
+            <div className="flex justify-between mt-1 text-white opacity-80 z-10 select-none overflow-hidden whitespace-nowrap px-1">
+                <span className="animate-cute-bounce" style={{animationDelay: '0s'}}>⛄</span>
+                <span className="animate-cute-bounce" style={{animationDelay: '0.2s'}}>⛄</span>
+                <span className="animate-cute-bounce" style={{animationDelay: '0.4s'}}>⛄</span>
+                <span className="animate-cute-bounce" style={{animationDelay: '0.1s'}}>⛄</span>
+                <span className="animate-cute-bounce" style={{animationDelay: '0.3s'}}>⛄</span>
+                <span className="animate-cute-bounce" style={{animationDelay: '0.5s'}}>⛄</span>
+                <span className="animate-cute-bounce" style={{animationDelay: '0.2s'}}>⛄</span>
+            </div>
           </div>
 
           <div className="flex-1 overflow-hidden relative bg-[#E0F7FA]">
@@ -1032,7 +1074,7 @@
                                     <div className="bg-[#FFF8E1] border-b-2 border-dashed border-gray-300 p-3 flex justify-between items-center shrink-0">
                                         <div className="flex items-center gap-2"><span className="font-black text-2xl sm:text-3xl text-gray-800">{formatDate(day.date)}</span><span className="text-lg sm:text-xl font-bold text-gray-400">({getWeekday(day.date)})</span></div>
                                         <div className="flex gap-2">
-                                            <button onClick={() => openAIPlanner(day.id)} className="p-2 sparkle-btn shadow active:translate-y-1 flex items-center gap-1 font-bold text-xs rounded-xl"><Icons.Sparkles size={16}/> AI</button>
+                                            <button onClick={() => openAIPlanner(day.id)} className="p-2 sparkle-btn shadow active:translate-y-1 flex items-center gap-1 font-bold text-xs rounded-xl"><Icons.Sparkles size={16}/> AI 規劃</button>
                                             <button onClick={() => triggerFileAction('itineraryImport', day.id)} className="p-2 bg-[#B2DFDB] text-[#00695C] border border-black shadow active:translate-y-1 flex items-center gap-1 font-bold text-xs rounded-xl"><Icons.ListPlus size={16}/> 匯入</button>
                                             <button onClick={() => triggerFileAction('itinerary', day.id)} className="p-2 bg-[#E1BEE7] text-[#9C27B0] border border-black shadow active:translate-y-1 rounded-full"><Icons.Camera size={18}/></button>
                                             <button onClick={() => removeDay(day.id)} className="p-2 bg-gray-100 text-gray-500 border border-gray-300 hover:text-red-500 rounded-lg"><Icons.Trash2 size={18}/></button>
@@ -1097,32 +1139,35 @@
                 <div className="px-4 pb-2"><div className="bg-[#FFF8E1] p-3 border-2 border-[#FFE0B2] shadow-sm flex justify-between items-center ticket-box"><div><div className="text-xs text-[#F57C00] font-bold">總花費 (台幣)</div><div className="text-2xl font-black text-[#E65100]">${totalSpentConvertedTWD.toLocaleString()}</div></div><div className="text-right"><div className="text-xs text-[#F57C00] font-bold">約合日幣</div><div className="text-xl font-black text-[#FF9800]">¥{Math.round(totalSpentConvertedTWD / getExchangeRate('JPY')).toLocaleString()}</div></div></div></div>
                 <div className="px-4 mb-2">
                     <div className="bg-white shadow-md border-2 border-[#F48FB1] p-3 rounded-2xl">
-                        <div className="mb-2"><select value={newExpense.date} onChange={e => setNewExpense({...newExpense, date: e.target.value})} className="w-full bg-gray-50 p-2 outline-none text-sm font-bold border border-gray-200 dashed-input">{(itinerary || []).map(d => <option key={d.id} value={d.date}>{formatDate(d.date)} ({getWeekday(d.date)})</option>)}</select></div>
-                        <div className="flex gap-2 mb-2"><select value={newExpense.category} onChange={e => setNewExpense({...newExpense, category: e.target.value})} className="bg-gray-50 p-2 outline-none text-sm font-bold w-1/3 border border-gray-200 dashed-input">{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select><input type="text" placeholder="品項..." value={newExpense.item} onChange={e => setNewExpense({...newExpense, item: e.target.value})} className="flex-1 bg-transparent border-b-2 border-dashed border-gray-300 outline-none text-base font-bold text-gray-800 h-10 px-1" /></div>
-                        <div className="flex gap-2 mb-2"><select value={newExpense.method} onChange={e => setNewExpense({...newExpense, method: e.target.value})} className="bg-gray-50 p-2 outline-none text-xs font-bold flex-1 border border-gray-200 text-gray-500 dashed-input">{paymentMethods.map(m => <option key={m} value={m}>{m}</option>)}</select><div className="relative flex-1"><select value={newExpense.platform} onChange={e => setNewExpense({...newExpense, platform: e.target.value})} className="w-full bg-gray-50 pl-2 pr-6 py-2 outline-none text-xs font-bold border border-gray-200 appearance-none h-10 dashed-input"><option value="">無 / 現場</option>{bookingPlatforms.map(p => <option key={p} value={p}>{p}</option>)}</select><button onClick={() => setShowSettingsModal(true)} className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 p-1"><Icons.Settings size={12}/></button></div></div>
-                        <div className="flex gap-2 items-center"><button onClick={() => triggerFileAction('receipt')} className="bg-[#E0F2F1] text-[#00695C] w-12 h-12 border-2 border-[#80CBC4] shadow-sm active:scale-95 transition-transform flex items-center justify-center shrink-0 rounded-xl"><Icons.Camera size={24}/></button>
-                        
-                        {/* Merged Amount/Currency Input - Same as Modal */}
-                        <div className="flex-1 flex items-center bg-gray-50 border-2 border-[#FFCCBC] px-2 h-12 rounded-xl overflow-hidden">
-                            <input 
-                                type="text" 
-                                placeholder="金額" 
-                                value={newExpense.amount} 
-                                readOnly
-                                onClick={() => { setCalcTarget('expense'); setShowCalculator(true); }}
-                                className="flex-1 bg-transparent border-none outline-none font-black text-xl text-[#E64A19] text-right pr-1 cursor-pointer" 
-                            />
-                            <div className="w-[1px] h-6 bg-gray-300 mx-1"></div>
-                            <select 
-                                value={newExpense.currency} 
-                                onChange={e => setNewExpense({...newExpense, currency: e.target.value})} 
-                                className="bg-transparent outline-none font-bold text-base w-16 text-center text-gray-700 appearance-none"
-                            >
-                                {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
-                            </select>
+                        <div className="flex gap-2 mb-2">
+                            <select value={newExpense.date} onChange={e => setNewExpense({...newExpense, date: e.target.value})} className="flex-1 bg-gray-50 p-2 outline-none text-sm font-bold border border-gray-200 dashed-input rounded-lg">{(itinerary || []).map(d => <option key={d.id} value={d.date}>{formatDate(d.date)} ({getWeekday(d.date)})</option>)}</select>
+                            <button onClick={() => triggerFileAction('receipt')} className="bg-[#E0F2F1] text-[#00695C] w-12 h-10 border-2 border-[#80CBC4] shadow-sm active:scale-95 transition-transform flex items-center justify-center shrink-0 rounded-lg"><Icons.Camera size={20}/></button>
                         </div>
-                        
-                        <button onClick={handleDirectAddExpense} className="bg-[#FF9F43] text-white w-12 h-12 shadow-md active:scale-95 transition-transform flex items-center justify-center shrink-0 rounded-xl"><Icons.Plus size={28}/></button></div>
+                        <div className="flex gap-2 mb-2"><select value={newExpense.category} onChange={e => setNewExpense({...newExpense, category: e.target.value})} className="bg-gray-50 p-2 outline-none text-sm font-bold w-1/3 border border-gray-200 dashed-input rounded-lg">{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select><input type="text" placeholder="品項..." value={newExpense.item} onChange={e => setNewExpense({...newExpense, item: e.target.value})} className="flex-1 bg-transparent border-b-2 border-dashed border-gray-300 outline-none text-base font-bold text-gray-800 h-10 px-1" /></div>
+                        <div className="flex gap-2 mb-2"><select value={newExpense.method} onChange={e => setNewExpense({...newExpense, method: e.target.value})} className="bg-gray-50 p-2 outline-none text-xs font-bold flex-1 border border-gray-200 text-gray-500 dashed-input rounded-lg">{paymentMethods.map(m => <option key={m} value={m}>{m}</option>)}</select><div className="relative flex-1"><select value={newExpense.platform} onChange={e => setNewExpense({...newExpense, platform: e.target.value})} className="w-full bg-gray-50 pl-2 pr-6 py-2 outline-none text-xs font-bold border border-gray-200 appearance-none h-10 dashed-input rounded-lg"><option value="">無 / 現場</option>{bookingPlatforms.map(p => <option key={p} value={p}>{p}</option>)}</select><button onClick={() => setShowSettingsModal(true)} className="absolute right-1 top-1/2 -translate-y-1/2 text-gray-400 p-1"><Icons.Settings size={12}/></button></div></div>
+                        <div className="flex gap-2 items-center">
+                            
+                            {/* Merged Amount/Currency Input - Same as Modal */}
+                            <div className="flex-1 flex items-center bg-gray-50 border-2 border-[#FFCCBC] px-2 h-12 rounded-xl overflow-hidden">
+                                <input 
+                                    type="text" 
+                                    placeholder="金額" 
+                                    value={newExpense.amount} 
+                                    readOnly
+                                    onClick={() => { setCalcTarget('expense'); setShowCalculator(true); }}
+                                    className="flex-1 bg-transparent border-none outline-none font-black text-xl text-[#E64A19] text-right pr-1 cursor-pointer" 
+                                />
+                                <div className="w-[1px] h-6 bg-gray-300 mx-1"></div>
+                                <select 
+                                    value={newExpense.currency} 
+                                    onChange={e => setNewExpense({...newExpense, currency: e.target.value})} 
+                                    className="bg-transparent outline-none font-bold text-xl w-36 text-center text-gray-700 appearance-none"
+                                >
+                                    {CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
+                                </select>
+                            </div>
+                            
+                            <button onClick={handleDirectAddExpense} className="bg-[#FF9F43] text-white w-12 h-12 shadow-md active:scale-95 transition-transform flex items-center justify-center shrink-0 rounded-xl"><Icons.Plus size={28}/></button></div>
                     </div>
                 </div>
                 <div className="flex-1 overflow-y-auto no-scrollbar pb-24 px-4">
@@ -1154,7 +1199,7 @@
               <div className="h-full overflow-y-auto p-4 pb-24 no-scrollbar">
                 <div className="flex gap-2 text-white mb-4"><div className="flex-1 bg-[#FF6B81] p-3 border-2 border-black shadow-md ticket-box"><div className="text-sm font-bold opacity-90">🙆‍♀️ 自用</div><div className="font-bold text-2xl">¥{shoppingStats.selfTotal.toLocaleString()}</div></div><div className="flex-1 bg-[#6C5CE7] p-3 border-2 border-black shadow-md ticket-box"><div className="text-sm font-bold opacity-90">📦 代購收</div><div className="font-bold text-2xl text-white">${Math.round(shoppingStats.agentTotal * getExchangeRate('JPY')).toLocaleString()}</div></div></div>
                 {Object.keys(agentSummary).length > 0 && (<div className="bg-[#E8EAF6] p-4 border-2 border-[#C5CAE9] mb-4 shadow-sm ticket-box"><h3 className="font-bold text-[#3949AB] mb-2 flex items-center gap-2"><Icons.Coins size={20}/> 代購結算 (每人總計)</h3><div className="space-y-2">{Object.entries(agentSummary).map(([name, totals]) => (<div key={name} className="flex justify-between items-center bg-white/60 p-2 rounded-xl"><span className="font-bold text-gray-700">{name}</span><div className="text-right"><div className="text-sm font-bold text-gray-500">¥{totals.jpy.toLocaleString()}</div><div className="text-lg font-black text-[#3949AB]">${totals.twd.toLocaleString()}</div></div></div>))}</div></div>)}
-                <div className="bg-white p-5 shadow-lg border-2 border-gray-100 mb-6 rounded-2xl"><div className="flex bg-gray-100 p-1 mb-3 border-2 border-gray-200 rounded-xl">{['self', 'agent', 'split'].map(type => ( <button key={type} onClick={() => setNewShopItem({...newShopItem, type})} className={`flex-1 py-2 text-lg font-bold transition-all rounded-lg ${newShopItem.type === type ? 'bg-white shadow text-black' : 'text-gray-400'}`}>{type === 'self' ? '自用' : type === 'agent' ? '代購' : '分帳'}</button> ))}</div><div className="flex gap-2 mb-2"><button onClick={() => { setBatchType('shopping'); setShowBatchModal(true); }} className="w-full bg-[#E0F2F1] text-[#00695C] py-2 font-bold mb-1 border-2 border-[#80CBC4] flex items-center justify-center gap-2 rounded-xl"><Icons.ListPlus size={20}/> 批次匯入</button></div><div className="flex gap-3 mb-3"><select value={newShopItem.priority} onChange={e => setNewShopItem({...newShopItem, priority: e.target.value})} className="bg-gray-50 border-2 border-gray-200 px-2 outline-none text-base font-bold w-32 dashed-input"><option value="high">🔴 必買</option><option value="medium">🟡 選購</option><option value="low">🟢 可買</option></select><input placeholder="戰利品名稱..." value={newShopItem.item} onChange={e => setNewShopItem({...newShopItem, item: e.target.value})} className="flex-1 bg-gray-50 border-2 border-gray-200 px-4 py-3 outline-none font-bold text-xl text-gray-800 dashed-input" /></div><div className="flex gap-3 mb-3"><input type="text" placeholder="日幣 ¥" value={newShopItem.budget} readOnly onClick={()=>{ setCalcTarget('shopping'); setShowCalculator(true); }} className="flex-1 bg-gray-50 border-2 border-gray-200 px-4 py-3 outline-none text-xl font-bold dashed-input cursor-pointer text-center" /></div>{(newShopItem.type === 'agent' || newShopItem.type === 'split') && ( <div className="flex gap-3 mb-3 animate-in fade-in">{newShopItem.type === 'agent' && <input placeholder="幫誰買?" value={newShopItem.note} onChange={e => setNewShopItem({...newShopItem, note: e.target.value})} className="flex-1 bg-[#EDE7F6] border-2 border-[#6C5CE7] px-4 py-3 outline-none text-[#6C5CE7] font-bold text-lg dashed-input" />}{newShopItem.type === 'split' && <div className="flex-1 flex items-center bg-[#FFF3E0] border-2 border-[#FFA502] px-4 text-[#FFA502] font-bold dashed-input"><span className="text-sm mr-2">人數:</span><input type="number" value={newShopItem.splitCount} onChange={e => setNewShopItem({...newShopItem, splitCount: e.target.value})} className="w-full bg-transparent outline-none text-xl" /></div>}</div> )}<button onClick={handleAddShoppingItem} className="w-full bg-[#FF6B81] text-white py-3 border-2 border-black korean-3d-btn font-bold text-xl flex items-center justify-center gap-2 mt-2 rounded-xl"><Icons.Plus size={24}/> 加入清單</button></div>
+                <div className="bg-white p-5 shadow-lg border-2 border-gray-100 mb-6 rounded-2xl"><div className="flex bg-gray-100 p-1 mb-3 border-2 border-gray-200 rounded-xl">{['self', 'agent', 'split'].map(type => ( <button key={type} onClick={() => setNewShopItem({...newShopItem, type})} className={`flex-1 py-2 text-lg font-bold transition-all rounded-lg ${newShopItem.type === type ? 'bg-white shadow text-black' : 'text-gray-400'}`}>{type === 'self' ? '自用' : type === 'agent' ? '代購' : '分帳'}</button> ))}</div><div className="flex gap-2 mb-2"><button onClick={() => { setBatchType('shopping'); setShowBatchModal(true); }} className="w-full bg-[#E0F2F1] text-[#00695C] py-2 font-bold mb-1 border-2 border-[#80CBC4] flex items-center justify-center gap-2 rounded-xl"><Icons.ListPlus size={20}/> 批次匯入</button></div><div className="flex gap-3 mb-3"><select value={newShopItem.priority} onChange={e => setNewShopItem({...newShopItem, priority: e.target.value})} className="bg-gray-50 border-2 border-gray-200 px-2 outline-none text-base font-bold w-32 dashed-input"><option value="high">🔴 必買</option><option value="medium">🟡 選購</option><option value="low">🟢 可買</option></select><input placeholder="戰利品名稱..." value={newShopItem.item} onChange={e => setNewShopItem({...newShopItem, item: e.target.value})} className="flex-1 bg-gray-50 border-2 border-gray-200 px-4 py-3 outline-none font-bold text-xl text-gray-800 dashed-input" /></div><div className="flex gap-3 mb-3"><input type="number" placeholder="日幣 ¥" value={newShopItem.budget} onChange={e => setNewShopItem({...newShopItem, budget: e.target.value})} className="flex-1 bg-gray-50 border-2 border-gray-200 px-4 py-3 outline-none text-xl font-bold dashed-input" /></div>{(newShopItem.type === 'agent' || newShopItem.type === 'split') && ( <div className="flex gap-3 mb-3 animate-in fade-in">{newShopItem.type === 'agent' && <input placeholder="幫誰買?" value={newShopItem.note} onChange={e => setNewShopItem({...newShopItem, note: e.target.value})} className="flex-1 bg-[#EDE7F6] border-2 border-[#6C5CE7] px-4 py-3 outline-none text-[#6C5CE7] font-bold text-lg dashed-input" />}{newShopItem.type === 'split' && <div className="flex-1 flex items-center bg-[#FFF3E0] border-2 border-[#FFA502] px-4 text-[#FFA502] font-bold dashed-input"><span className="text-sm mr-2">人數:</span><input type="number" value={newShopItem.splitCount} onChange={e => setNewShopItem({...newShopItem, splitCount: e.target.value})} className="w-full bg-transparent outline-none text-xl" /></div>}</div> )}<button onClick={handleAddShoppingItem} className="w-full bg-[#FF6B81] text-white py-3 border-2 border-black korean-3d-btn font-bold text-xl flex items-center justify-center gap-2 mt-2 rounded-xl"><Icons.Plus size={24}/> 加入清單</button></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {(shoppingList || []).filter(i => !i.bought).map(item => (
                     <div key={item.id} className="bg-white p-4 border-4 shadow-sm flex items-center justify-between ticket-box" style={{ borderColor: item.type === 'agent' ? '#6C5CE7' : item.type === 'split' ? '#FFA502' : '#FF6B81' }}>
@@ -1206,7 +1251,7 @@
                 <div className="h-full overflow-y-auto p-4 pb-24 no-scrollbar space-y-4">
                     <div className="grid grid-cols-2 gap-3">
                          <div className="space-y-2"><a href="https://www.vjw.digital.go.jp/" target="_blank" className="bg-white p-2 border border-blue-200 shadow-sm flex items-center gap-2 hover:bg-blue-50 ticket-box"><span className="text-xl">🇯🇵</span><span className="text-blue-600 font-bold text-sm">VJW 入境</span></a><a href="https://tenki.jp/" target="_blank" className="bg-white p-2 border border-blue-200 shadow-sm flex items-center gap-2 hover:bg-blue-50 ticket-box"><span className="text-xl">🌤️</span><span className="text-blue-600 font-bold text-sm">天氣 Tenki.jp</span></a><a href="https://www.google.com/finance/quote/JPY-TWD" target="_blank" className="bg-white p-2 border border-blue-200 shadow-sm flex items-center gap-2 hover:bg-blue-50 ticket-box"><span className="text-xl">💰</span><span className="text-blue-600 font-bold text-sm">即時匯率</span></a></div>
-                         <div className="bg-[#FFEBEE] p-3 border border-[#FFCDD2] flex flex-col justify-between ticket-box"><div className="flex justify-between items-center mb-2"><span className="text-xs font-bold text-gray-700">👮 報警</span><a href="tel:110" className="text-red-600 font-black">110</a></div><div className="flex justify-between items-center mb-2"><span className="text-xs font-bold text-gray-700">🚑 救護</span><a href="tel:119" className="text-red-600 font-black">119</a></div><div className="flex flex-col gap-1 mt-1 border-t border-red-200 pt-1"><span className="text-xs font-bold text-gray-700">🇹🇼 駐大阪辦事處</span><a href="tel:+81-90-8794-4568" className="text-red-600 font-black text-xs block text-right">緊急專線</a><a href="https://maps.google.com/?q=大阪市北區中之島2-3-18 中之島Festival Tower 17樓" target="_blank" className="text-[10px] text-gray-500 underline leading-tight block text-right">大阪市北區中之島2-3-18<br/>中之島Festival Tower 17樓</a></div></div>
+                         <div className="bg-[#FFEBEE] p-3 border border-[#FFCDD2] flex flex-col justify-between ticket-box h-full"><div className="flex justify-between items-center mb-2"><span className="text-sm font-bold text-gray-700">👮 報警</span><a href="tel:110" className="text-red-600 font-black text-lg">110</a></div><div className="flex justify-between items-center mb-2"><span className="text-sm font-bold text-gray-700">🚑 救護</span><a href="tel:119" className="text-red-600 font-black text-lg">119</a></div><div className="flex flex-col gap-1 mt-1 border-t border-red-200 pt-1"><span className="text-sm font-bold text-gray-700">🇹🇼 駐大阪辦事處</span><a href="tel:+81-90-8794-4568" className="text-red-600 font-black text-sm block text-right">緊急專線</a><a href="https://maps.google.com/?q=大阪市北區中之島2-3-18 中之島Festival Tower 17樓" target="_blank" className="text-xs text-gray-500 underline leading-tight block text-right">大阪市北區中之島2-3-18<br/>中之島Festival Tower 17樓</a></div></div>
                     </div>
                     <div className="bg-[#E8EAF6] p-4 border-2 border-[#C5CAE9] rounded-2xl"><div className="flex justify-between items-center mb-2"><h3 className="font-bold text-xl text-[#3949AB] flex items-center gap-2"><Icons.Bed size={22}/> 住宿情報</h3><button onClick={() => setShowAddHotel(!showAddHotel)} className="bg-[#3949AB] text-white px-3 py-1 text-sm font-bold rounded-lg">{showAddHotel ? '取消' : '+ 新增'}</button></div>{showAddHotel && (<div className="bg-white p-3 mb-3 animate-in fade-in rounded-xl"><div className="flex flex-col gap-1 mb-2"><label className="text-xs text-gray-500 font-bold">Check-in 日期</label><input type="date" value={newHotel.date} onChange={e => setNewHotel({...newHotel, date: e.target.value})} className="border-b outline-none font-bold w-full" /></div><input placeholder="飯店名稱" value={newHotel.name} onChange={e => setNewHotel({...newHotel, name: e.target.value})} className="w-full border-b mb-2 outline-none font-bold text-lg" /><input placeholder="地址 (供導航用)" value={newHotel.address} onChange={e => setNewHotel({...newHotel, address: e.target.value})} className="w-full border-b mb-2 outline-none text-sm" /><input placeholder="訂單編號/電話/備註" value={newHotel.note} onChange={e => setNewHotel({...newHotel, note: e.target.value})} className="w-full border-b mb-2 outline-none text-sm text-gray-500" /><button onClick={handleAddHotel} className="w-full bg-[#3949AB] text-white py-2 font-bold rounded-lg">儲存飯店</button></div>)}<div className="space-y-2">{(accommodations || []).sort((a,b) => new Date(a.date) - new Date(b.date)).map(h => (<div key={h.id} className="bg-white p-3 shadow-sm border border-[#C5CAE9] relative ticket-box"><div className="flex justify-between items-start"><div className="flex-1">{h.date && <div className="text-xs font-bold text-[#3949AB] bg-[#E8EAF6] w-fit px-2 rounded mb-1">{formatDate(h.date)} ({getWeekday(h.date)}) Check-in</div>}<div className="font-bold text-lg text-gray-800 pr-6">{h.name}</div></div></div>{h.address && <button onClick={(e) => openGoogleMaps(e, h.address)} className="text-blue-500 text-xs font-bold underline flex items-center gap-1 my-1"><Icons.Map size={12}/> {h.address}</button>}{h.note && <div className="text-sm text-gray-500 bg-gray-50 p-1 rounded mt-1">📝 {h.note}</div>}<button onClick={() => handleDeleteHotel(h.id)} className="absolute top-2 right-2 text-gray-300 hover:text-red-400"><Icons.Trash2 size={16}/></button></div>))}</div></div>
                     <div className="bg-[#E0F2F1] p-4 border-2 border-[#80CBC4] rounded-2xl"><div className="flex justify-between items-center mb-2"><h3 className="font-bold text-xl text-[#00695C] flex items-center gap-2"><Icons.Ticket size={22}/> 預約車訊</h3><button onClick={() => setShowAddReserv(!showAddReserv)} className="bg-[#00695C] text-white px-3 py-1 text-sm font-bold rounded-lg">{showAddReserv ? '取消' : '+ 新增'}</button></div>{showAddReserv && (<div className="bg-white p-3 mb-3 animate-in fade-in rounded-xl"><input placeholder="預約項目 (如: Haruka車票)" value={newReserv.title} onChange={e => setNewReserv({...newReserv, title: e.target.value})} className="w-full border-b mb-2 outline-none font-bold" /><div className="flex flex-col gap-1 mb-2"><label className="text-xs text-gray-500 font-bold">日期與時間</label><input type="datetime-local" value={newReserv.time} onChange={e => setNewReserv({...newReserv, time: e.target.value})} className="w-full border-b outline-none text-sm" /></div><input placeholder="預約代號 / 座位 / 備註" value={newReserv.code} onChange={e => setNewReserv({...newReserv, code: e.target.value})} className="w-full border-b mb-2 outline-none text-sm text-gray-500" /><button onClick={handleAddReserv} className="w-full bg-[#00695C] text-white py-2 font-bold rounded-lg">儲存預約</button></div>)}<div className="space-y-2">{(reservations || []).sort((a,b) => new Date(a.time) - new Date(b.time)).map(r => (<div key={r.id} className="bg-white p-3 shadow-sm border border-[#80CBC4] relative ticket-box"><div className="flex justify-between items-start"><div>{r.time && <div className="text-xs font-bold bg-[#B2DFDB] text-[#00695C] px-2 py-1 rounded h-fit mb-1">{new Date(r.time).toLocaleString([], {month:'numeric', day:'numeric', weekday:'short', hour:'2-digit', minute:'2-digit'})}</div>}<div className="font-bold text-gray-800">{r.title}</div></div></div>{r.code && <div className="text-lg font-mono font-bold text-gray-600 mt-1 tracking-wider">{r.code}</div>}<button onClick={() => handleDeleteReserv(r.id)} className="absolute bottom-2 right-2 text-gray-300 hover:text-red-400"><Icons.Trash2 size={16}/></button></div>))}</div></div>
